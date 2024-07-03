@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import "./app.css";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -11,7 +12,8 @@ const App = () => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [notificationMessage, setNotificationMessage] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -26,12 +28,16 @@ const App = () => {
       });
       window.localStorage.setItem("loggedUser", JSON.stringify(user));
       blogService.setToken(user.token);
-      console.log(user.token); // debugging
+
       setUser(user);
       setUsername("");
       setPassword("");
+      setNotificationMessage(`logged in as ${user.username}`);
+      setTimeout(() => {
+        setNotificationMessage(null);
+      }, 5000);
     } catch (exception) {
-      setErrorMessage("Wrong credentials");
+      setErrorMessage("Wrong username or password");
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000);
@@ -71,6 +77,10 @@ const App = () => {
     </form>
   );
   const logout = () => {
+    setNotificationMessage(`logged out, take care ${user.username}`);
+    setTimeout(() => {
+      setNotificationMessage(null);
+    }, 5000);
     setUser(null);
     window.localStorage.clear();
   };
@@ -86,6 +96,10 @@ const App = () => {
         likes: 0,
       });
       setBlogs([...blogs, newBlog]);
+      setNotificationMessage(`a new blog ${title} by ${author}`);
+      setTimeout(() => {
+        setNotificationMessage(null);
+      }, 5000);
       setTitle("");
       setAuthor("");
       setUrl("");
@@ -127,7 +141,10 @@ const App = () => {
   return (
     <div>
       <h2>{user ? "blogs" : "login to application"}</h2>
-      <div>{errorMessage}</div>
+      {errorMessage ? <div className="error">{errorMessage}</div> : null}
+      {notificationMessage ? (
+        <div className="notification">{notificationMessage}</div>
+      ) : null}
       {user ? loggedIn() : loginForm()}
     </div>
   );
