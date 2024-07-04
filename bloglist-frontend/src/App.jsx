@@ -95,6 +95,11 @@ const App = () => {
     }, 5000);
   };
 
+  const increaseLikes = async (blog) => {
+    const updatedBlog = await blogService.likeBlog(blog);
+    setBlogs(blogs.map((b) => (b.id === updatedBlog.id ? updatedBlog : b)));
+  };
+
   const loggedIn = () => (
     <>
       <p>{user.username} logged in </p>
@@ -103,7 +108,7 @@ const App = () => {
         <BlogForm createBlog={createBlog} />
       </Togglable>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} increaseLikes={increaseLikes} />
       ))}
     </>
   );

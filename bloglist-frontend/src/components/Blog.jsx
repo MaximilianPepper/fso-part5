@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, increaseLikes }) => {
   const [visible, setVisible] = useState(false);
 
   const blogStyle = {
@@ -25,9 +25,8 @@ const Blog = ({ blog }) => {
         <>
           <p>{blog.url}</p>
           <p>likes: {blog.likes}</p>
-          <button>like</button>
+          <button onClick={() => increaseLikes(blog)}>like</button>
           {blog.user && <p>{blog.user.name} </p>}
-          // some old data in the db doesnt have user info in blogs
         </>
       ) : null}
     </div>
