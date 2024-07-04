@@ -34,7 +34,7 @@ test("renders content", () => {
   // screen.debug();
 });
 
-test("clicking the button calls event handler once", async () => {
+test("clicking the show button makes likes and username visible", async () => {
   const blog = {
     title: "test name",
     author: "max",
@@ -65,4 +65,37 @@ test("clicking the button calls event handler once", async () => {
   const userName = screen.getByText("Superuser");
   expect(likes).toBeDefined();
   expect(userName).toBeDefined();
+});
+
+test("clicking like twice the event handler the component received as props is called twice", async () => {
+  const blog = {
+    title: "test name",
+    author: "max",
+    likes: 14,
+    user: {
+      name: "Superuser",
+    },
+  };
+
+  const mockIncreaseLikes = vi.fn();
+  const mockDeleteBlog = vi.fn();
+
+  render(
+    <Blog
+      blog={blog}
+      increaseLikes={mockIncreaseLikes}
+      deleteBlog={mockDeleteBlog}
+    />
+  );
+  // make like button visible first
+  const user = userEvent.setup();
+  const viewBtn = screen.getByText("view");
+  await user.click(viewBtn);
+
+  const button = screen.getByText("like");
+  await user.click(button);
+  await user.click(button);
+  screen.debug();
+
+  expect(mockIncreaseLikes.mock.calls).toHaveLength(2);
 });
