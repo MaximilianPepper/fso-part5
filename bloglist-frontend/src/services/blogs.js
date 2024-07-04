@@ -1,4 +1,5 @@
 import axios from "axios";
+
 const baseUrl = "/api/blogs";
 
 let token = null;
@@ -33,4 +34,5 @@ const likeBlog = (blog) => {
 const deleteBlog = (id) => {
   const request = axios.delete(`${baseUrl}/${id}`);
 };
+
 export default { getAll, setToken, create, likeBlog, deleteBlog };
