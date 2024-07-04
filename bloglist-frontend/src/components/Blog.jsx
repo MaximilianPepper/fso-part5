@@ -19,8 +19,9 @@ const Blog = ({ blog, increaseLikes, deleteBlog }) => {
 
   return (
     <div style={blogStyle}>
-      <div>
-        {blog.title} {blog.author} <button onClick={handleClick}>view</button>
+      <div className="blog">
+        <p>{blog.title}</p> <p>{blog.author}</p>{" "}
+        <button onClick={handleClick}>view</button>
       </div>
       {visible ? (
         <>
