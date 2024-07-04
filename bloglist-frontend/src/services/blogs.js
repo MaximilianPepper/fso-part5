@@ -29,4 +29,8 @@ const likeBlog = (blog) => {
   const request = axios.put(`${baseUrl}/${blog.id}`, updatedBlog);
   return request.then((response) => response.data);
 };
-export default { getAll, setToken, create, likeBlog };
+
+const deleteBlog = (id) => {
+  const request = axios.delete(`${baseUrl}/${id}`);
+};
+export default { getAll, setToken, create, likeBlog, deleteBlog };
