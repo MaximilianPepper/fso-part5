@@ -36,3 +36,33 @@ describe("Blog app", () => {
     });
   });
 });
+
+describe("When logged in", () => {
+  beforeEach(async ({ page, request }) => {
+    await request.post("http:localhost:3003/api/testing/reset");
+    await request.post("http://localhost:3003/api/users", {
+      data: {
+        name: "Massi",
+        username: "max",
+        password: "password",
+      },
+    });
+    await page.goto("http://localhost:5173");
+    await page.getByRole("textbox").first().fill("max");
+    await page.getByRole("textbox").last().fill("password");
+
+    await page.getByRole("button", { name: "login" }).click();
+  });
+
+  test.only("a new blog can be created", async ({ page }) => {
+    await page.getByRole("button", { name: "new blog" }).click();
+    const textboxes = await page.getByRole("textbox").all();
+    await textboxes[0].fill("A new Blog");
+    await textboxes[1].fill("Tolkien");
+    await textboxes[2].fill("www.lordoftherings.com");
+    await page.getByRole("button", { name: "save" }).click();
+    await expect(page.getByText("A new Blog", { exact: true })).toBeVisible();
+    await expect(page.getByText("Tolkien", { exact: true })).toBeVisible();
+    await expect(page.getByText("www.lordoftherings.com")).not.toBeVisible();
+  });
+});
